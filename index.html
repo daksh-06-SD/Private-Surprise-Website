@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>For My Cutie Pie ❤️</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600;800&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #05050a;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      transition: background 1.5s ease;
+    }
+
+    /* Screen Rotation Prompt for Portrait Mode */
+    #rotate-warning {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #0a0106;
+      z-index: 9999;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #rotate-warning .phone-icon {
+      font-size: 4rem;
+      animation: rotatePhone 2s infinite ease-in-out;
+      margin-bottom: 15px;
+    }
+
+    #rotate-warning p {
+      font-size: 1.2rem;
+      color: #ff7eb3;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    @keyframes rotatePhone {
+      0%, 10% { transform: rotate(0deg); }
+      50%, 60% { transform: rotate(-90deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    @media screen and (orientation: portrait) {
+      #rotate-warning {
+        display: flex !important;
+      }
+    }
+
+    #heart-rain-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    .falling-heart {
+      position: absolute;
+      top: -10%;
+      color: #ff4d6d;
+      user-select: none;
+      opacity: 0.35;
+      animation: fallSmooth linear infinite;
+      filter: drop-shadow(0 0 6px rgba(255, 77, 109, 0.4));
+    }
+
+    @keyframes fallSmooth {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.35; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0.05; }
+    }
+
+    .screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+      transition: opacity 1.2s ease, transform 1s ease;
+    }
+
+    .hidden {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      display: none !important;
+    }
+
+    canvas.bg-canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #countdown-screen {
+      background: radial-gradient(circle at center, #230933 0%, #05020a 100%);
+      z-index: 10;
+    }
+
+    .neon-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(25px);
+      border: 2px solid rgba(255, 105, 180, 0.3);
+      padding: 20px 50px;
+      border-radius: 30px;
+      box-shadow: 0 0 50px rgba(255, 0, 127, 0.3), inset 0 0 20px rgba(255, 105, 180, 0.2);
+      text-align: center;
+      position: relative;
+    }
+
+    .neon-card h3 {
+      font-size: 1rem;
+      letter-spacing: 3px;
+      font-weight: 600;
+      color: #ff7eb3;
+      margin-bottom: 10px;
+    }
+
+    #timer {
+      font-size: 5.5rem;
+      font-weight: 800;
+      background: linear-gradient(180deg, #ffffff 0%, #ff7eb3 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 35px rgba(255, 117, 140, 0.9));
+      animation: pulseAdvance 1s infinite alternate cubic-bezier(0.45, 0.05, 0.55, 0.95);
+    }
+
+    #interactive-screen {
+      background: radial-gradient(circle, #2d0b1e 0%, #0a0106 100%);
+      z-index: 8;
+    }
+
+    .teddy-container {
+      width: 140px;
+      height: 140px;
+      margin-bottom: 15px;
+      animation: floatCute 3s ease-in-out infinite;
+      filter: drop-shadow(0 15px 25px rgba(255, 20, 147, 0.4));
+      cursor: pointer;
+    }
+
+    .teddy-container svg { width: 100%; height: 100%; }
+
+    .btn-click-me {
+      position: relative;
+      padding: 12px 35px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(45deg, #ff007f, #ff5252);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(255, 0, 127, 0.6);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 10;
+    }
+
+    .popup {
+      position: absolute;
+      z-index: 20;
+      background: rgba(20, 10, 25, 0.92);
+      border: 2px solid #ff4081;
+      backdrop-filter: blur(20px);
+      padding: 20px 35px;
+      border-radius: 25px;
+      box-shadow: 0 0 60px rgba(255, 64, 129, 0.7);
+      text-align: center;
+      transform: scale(0) rotate(-10deg);
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+    }
+
+    .popup.show { transform: scale(1) rotate(0deg); }
+    .popup h2 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.2rem;
+      background: linear-gradient(45deg, #ff758c, #ff7eb3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Horizontal Side-by-Side Memories Layout */
+    #memories-screen {
+      background: radial-gradient(circle at center, #2a081a 0%, #080106 100%);
+      z-index: 7;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 5vw;
+      padding: 0 5vw;
+    }
+
+    .photo-display {
+      position: relative;
+      width: 42vw;
+      height: 70vh;
+      mask-image: radial-gradient(ellipse at center, black 65%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 65%, transparent 100%);
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(255, 20, 147, 0.4);
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.8s ease-in-out;
+    }
+
+    .photo-display.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .lyrics-wrapper {
+      width: 45vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: left;
+    }
+
+    .lyric-line {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.2rem;
+      color: #fff;
+      text-shadow: 0 0 15px rgba(255, 105, 180, 0.8), 2px 2px 5px #000;
+      margin-bottom: 12px;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.6s ease;
+    }
+
+    .lyric-line.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    #heart-screen {
+      background: radial-gradient(circle, #1a0009 0%, #000000 100%);
+      z-index: 9;
+      transition: background 1.5s ease;
+    }
+
+    #heart-screen.romantic-theme {
+      background: radial-gradient(circle at center, #520023 0%, #17000a 100%) !important;
+    }
+
+    .angel-container {
+      position: absolute;
+      top: 15%;
+      left: -60vw;
+      font-size: 110px;
+      z-index: 100;
+      filter: drop-shadow(0 0 20px rgba(255, 192, 203, 0.9));
+      transition: all 2.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .angel-fly-in {
+      left: 8%;
+      transform: translateY(-10px) scale(1);
+    }
+
+    .magic-arrow {
+      position: absolute;
+      font-size: 40px;
+      z-index: 101;
+      display: none;
+      filter: drop-shadow(0 0 15px #ff0055);
+    }
+
+    .arrow-shoot {
+      display: block !important;
+      animation: shootToHeart 1.2s forwards cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    }
+
+    @keyframes shootToHeart {
+      0% { left: 18%; top: 28%; transform: rotate(-15deg) scale(1); opacity: 1; }
+      100% { left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(45deg) scale(1.5); opacity: 0; }
+    }
+
+    .big-heart {
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) scale(1);
+      font-size: 45vh !important;
+      z-index: 50 !important;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      filter: drop-shadow(0 0 50px #ff0055);
+      animation: pulseHeart 1.2s infinite alternate ease-in-out;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+
+    @keyframes pulseHeart {
+      0% { transform: translate(-50%, -50%) scale(1); }
+      100% { transform: translate(-50%, -50%) scale(1.15); }
+    }
+
+    .burst-animation {
+      animation: heartExplode 0.6s forwards ease-out !important;
+    }
+
+    @keyframes heartExplode {
+      0% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+      50% { transform: translate(-50%, -50%) scale(2); filter: drop-shadow(0 0 100px #ff0055); opacity: 0.8; }
+      100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    }
+
+    .final-love-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.3);
+      width: 90%;
+      text-align: center;
+      color: #fff;
+      font-family: 'Dancing Script', cursive;
+      font-size: 3rem;
+      font-weight: bold;
+      line-height: 1.3;
+      text-shadow: 0 0 20px #ff0055, 0 0 40px #ff0077, 0 0 60px #ff7300;
+      opacity: 0;
+      z-index: 200 !important;
+      transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .final-text-show {
+      opacity: 1 !important;
+      transform: translate(-50%, -50%) scale(1) !important;
+    }
+
+    #close-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: #000;
+      opacity: 0;
+      z-index: 999;
+      pointer-events: none;
+      transition: opacity 3.5s ease-in-out;
+    }
+
+    .fade-to-black { opacity: 1 !important; }
+
+    @keyframes pulseAdvance {
+      0% { transform: scale(0.85); filter: drop-shadow(0 0 20px rgba(255,0,127,0.6)); }
+      100% { transform: scale(1.1); filter: drop-shadow(0 0 50px rgba(255,105,180,1)); }
+    }
+
+    @keyframes floatCute {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(3deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Rotate Phone Warning -->
+  <div id="rotate-warning">
+    <div class="phone-icon">📱↩️</div>
+    <p>Please Rotate Your Phone Horizontally ❤️</p>
+  </div>
+
+  <!-- Audio Elements -->
+  <audio id="bg-music" src="kaun_tujhe.mp3" preload="auto"></audio>
+  <audio id="pop-sound" src="https://assets.mixkit.co/active_storage/sfx/2578/2578-preview.mp3" preload="auto"></audio>
+  <audio id="arrow-sound" src="https://assets.mixkit.co/active_storage/sfx/2361/2361-preview.mp3" preload="auto"></audio>
+  <audio id="blast-sound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
+  <audio id="teddy-voice" src="teddy_voice.mp3" preload="auto"></audio>
+
+  <div id="heart-rain-container"></div>
+  <canvas id="canvas-fx" class="bg-canvas"></canvas>
+
+  <div id="close-overlay"></div>
+
+  <!-- 1. Countdown Screen -->
+  <div id="countdown-screen" class="screen">
+    <div class="neon-card">
+      <h3>SURPRISE UNLOCKING IN</h3>
+      <div id="timer">3</div>
+    </div>
+  </div>
+
+  <!-- 2. Cute Teddy Screen -->
+  <div id="interactive-screen" class="screen hidden">
+    <div class="teddy-container" id="teddy-btn">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="30" fill="#a0522d" />
+        <circle cx="50" cy="50" r="18" fill="#ffb6c1" />
+        <circle cx="150" cy="50" r="30" fill="#a0522d" />
+        <circle cx="150" cy="50" r="18" fill="#ffb6c1" />
+        <circle cx="100" cy="90" r="65" fill="#cd853f" />
+        <circle cx="75" cy="80" r="10" fill="#000" />
+        <circle cx="72" cy="77" r="4" fill="#fff" />
+        <circle cx="125" cy="80" r="10" fill="#000" />
+        <circle cx="122" cy="77" r="4" fill="#fff" />
+        <ellipse cx="100" cy="105" rx="25" ry="20" fill="#f5222d" opacity="0.1" />
+        <ellipse cx="100" cy="105" rx="22" ry="16" fill="#ffebcd" />
+        <polygon points="100,96 92,106 108,106" fill="#4a2e13" />
+        <circle cx="60" cy="100" r="10" fill="#ff69b4" opacity="0.5" />
+        <circle cx="140" cy="100" r="10" fill="#ff69b4" opacity="0.5" />
+        <path d="M 60,140 Q 100,120 140,140 Q 160,190 100,195 Q 40,190 60,140 Z" fill="#cd853f" />
+        <ellipse cx="100" cy="165" rx="28" ry="22" fill="#ffebcd" />
+      </svg>
+    </div>
+
+    <button class="btn-click-me" id="btn-teddy">Click Me ❤️</button>
+
+    <div id="popup-box" class="popup">
+      <h2>Cute Photos of You & Me ✨</h2>
+      <p style="margin-top: 8px; color: #e0e0e0; font-size: 0.85rem;">Tap here to open our magical memories!</p>
+    </div>
+  </div>
+
+  <!-- 3. Memories Slideshow Screen -->
+  <div id="memories-screen" class="screen hidden">
+    <div class="photo-display" id="photo-frame">
+      <img id="slideshow-img" src="" alt="Memory Photo" style="width:100%; height:100%; object-fit:cover;">
+      <video id="slideshow-video" style="width:100%; height:100%; object-fit:cover; display:none;" autoplay muted loop playsinline></video>
+    </div>
+    <div class="lyrics-wrapper">
+      <div class="lyric-line" id="lyric-1"></div>
+      <div class="lyric-line" id="lyric-2" style="color: #ff7eb3;"></div>
+    </div>
+  </div>
+
+  <!-- 4. Heart Blast Final Screen -->
+  <div id="heart-screen" class="screen hidden">
+    <div id="angel" class="angel-container">🧚‍♀️✨</div>
+    <div id="arrow" class="magic-arrow">🏹💘</div>
+    <div id="main-heart" class="big-heart">❤️</div>
+    <div id="final-message-box" class="final-love-text">
+      I Love You My Cutiee Pie <br> You Are Only Mine ❤️
+    </div>
+  </div>
+
+  <script>
+    const memories = [
+      { isIntro: true, line1: "✨ This is only for you ✨", line2: "", delayLine2: 0, duration: 8000 },
+      { img: "photo1.jpeg", line1: "tu aati hai seene me", line2: "jab-jab saansein bharta hoon", delayLine2: 3100, duration: 7900 },
+      { img: "photo2.jpeg", line1: "tere dil ki galliyon se", line2: "main har roz guzarta hoon", delayLine2: 3100, duration: 7900 },
+      { img: "photo3.jpeg", line1: "hawa ke jaisa chalti hai tu", line2: "main reth jaisi udta hoon", delayLine2: 3100, duration: 7900 },
+      { img: "photo4.jpeg", line1: "kaun tumhe yun pyar karega", line2: "jaise main karta hoon", delayLine2: 3500, duration: 8900 },
+      { img: "photo5.jpeg", line1: "✨ Our Sweet Memories ✨", line2: "", delayLine2: 0, duration: 7500 },
+      { img: "photo6.jpeg", line1: "Every moment with you...", line2: "", delayLine2: 0, duration: 7500 },
+      { img: "photo7.jpeg", line1: "...feels like pure magic ❤️", line2: "", delayLine2: 0, duration: 7400 },
+      { video: "video1.mp4", line1: "Tu jo mujhe aa mila", line2: "sapne hue sarfire", delayLine2: 3100, duration: 7900 },
+      { video: "video2.mp4", line1: "hatho mein aate nhi", line2: "udte hai lamhe mere", delayLine2: 3100, duration: 7900 },
+      { img: "photo9.jpeg", line1: "meri hasi tujhse meri khushi tujhse", line2: "tujhe kharab kya be khadar", delayLine2: 3100, duration: 7900 },
+      { img: "photo8.jpeg", line1: "jis din tujhe na dekhu", line2: "paagal paagal phirta hoon", delayLine2: 3100, duration: 7900 },
+      { video: "video4.mp4", line1: "kaun tumhe yun pyar karega", line2: "jaise main karta hoon", delayLine2: 3500, duration: 8900 },
+      { video: "video5.mp4", line1: "haaa.. haaaa...", line2: "tu hi mera sab kuch hai ❤️", delayLine2: 3000, duration: 7900 },
+      { video: "video6.mp4", line1: "always & forever...", line2: "only yours ✨", delayLine2: 3000, duration: 7900 }
+    ];
+
+    const countdownScreen = document.getElementById('countdown-screen');
+    const interactiveScreen = document.getElementById('interactive-screen');
+    const memoriesScreen = document.getElementById('memories-screen');
+    const heartScreen = document.getElementById('heart-screen');
+
+    const timerEl = document.getElementById('timer');
+    const btnTeddy = document.getElementById('btn-teddy');
+    const popupBox = document.getElementById('popup-box');
+
+    const slideshowImg = document.getElementById('slideshow-img');
+    const slideshowVideo = document.getElementById('slideshow-video');
+    const photoFrame = document.getElementById('photo-frame');
+    const lyric1 = document.getElementById('lyric-1');
+    const lyric2 = document.getElementById('lyric-2');
+
+    const bgMusic = document.getElementById('bg-music');
+    const popSound = document.getElementById('pop-sound');
+    const arrowSound = document.getElementById('arrow-sound');
+    const blastSound = document.getElementById('blast-sound');
+    const teddyVoice = document.getElementById('teddy-voice');
+
+    function unlockAudio() {
+      [bgMusic, popSound, arrowSound, blastSound, teddyVoice].forEach(audio => {
+        if (audio) {
+          audio.play().then(() => {
+            audio.pause();
+            audio.currentTime = 0;
+          }).catch(() => {});
+        }
+      });
+      document.removeEventListener('touchstart', unlockAudio);
+      document.removeEventListener('click', unlockAudio);
+    }
+    document.addEventListener('touchstart', unlockAudio, { once: true });
+    document.addEventListener('click', unlockAudio, { once: true });
+
+    function startSlowHeartRain() {
+      const container = document.getElementById('heart-rain-container');
+      if (!container) return;
+
+      container.innerHTML = '';
+      const hearts = ['❤️', '💖', '💕', '💗', '✨'];
+
+      setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'falling-heart';
+        heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.fontSize = (Math.random() * 10 + 14) + 'px';
+        heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+        
+        container.appendChild(heart);
+
+        setTimeout(() => { heart.remove(); }, 8000);
+      }, 350);
+    }
+
+    let count = 3;
+    const countdownInterval = setInterval(() => {
+      count--;
+      if (count > 0) {
+        timerEl.innerText = count;
+      } else {
+        clearInterval(countdownInterval);
+        countdownScreen.classList.add('hidden');
+        interactiveScreen.classList.remove('hidden');
+        
+        setTimeout(() => {
+          if (teddyVoice) {
+            teddyVoice.currentTime = 0;
+            teddyVoice.play().catch(err => console.log(err));
+          }
+        }, 300);
+      }
+    }, 1000);
+
+    btnTeddy.addEventListener('click', triggerPopup);
+    document.getElementById('teddy-btn').addEventListener('click', triggerPopup);
+
+    function triggerPopup() {
+      btnTeddy.style.display = 'none';
+      if (popSound) popSound.play().catch(() => {});
+      popupBox.classList.add('show');
+    }
+
+    popupBox.addEventListener('click', () => {
+      interactiveScreen.classList.add('hidden');
+      memoriesScreen.classList.remove('hidden');
+
+      setTimeout(() => {
+        if (bgMusic) bgMusic.play().catch(() => {});
+        startSlowHeartRain();
+        runMemorySequence(0);
+      }, 200);
+    });
+
+    function runMemorySequence(index) {
+      if (index < memories.length) {
+        const item = memories[index];
+
+        photoFrame.classList.remove('active');
+        lyric1.classList.remove('visible');
+        lyric2.classList.remove('visible');
+
+        setTimeout(() => {
+          if (item.isIntro) {
+            photoFrame.style.display = 'none';
+            slideshowVideo.pause();
+          } else {
+            photoFrame.style.display = 'block';
+            
+            if (item.video) {
+              slideshowImg.style.display = 'none';
+              slideshowVideo.style.display = 'block';
+              slideshowVideo.src = item.video;
+              slideshowVideo.play().catch(() => {});
+            } else {
+              slideshowVideo.style.display = 'none';
+              slideshowVideo.pause();
+              slideshowImg.style.display = 'block';
+              slideshowImg.src = item.img;
+            }
+            photoFrame.classList.add('active');
+          }
+
+          lyric1.innerText = item.line1;
+          lyric1.classList.add('visible');
+
+          setTimeout(() => {
+            lyric2.innerText = item.line2 || '';
+            if (item.line2) {
+              lyric2.classList.add('visible');
+            }
+          }, item.delayLine2);
+
+          setTimeout(() => {
+            runMemorySequence(index + 1);
+          }, item.duration);
+
+        }, 1000);
+
+      } else {
+        memoriesScreen.classList.add('hidden');
+        heartScreen.classList.remove('hidden');
+        triggerHeartBlast();
+      }
+    }
+
+    function triggerHeartBlast() {
+      const angel = document.getElementById('angel');
+      const arrow = document.getElementById('arrow');
+      const heartScreen = document.getElementById('heart-screen');
+      const mainHeart = document.getElementById('main-heart');
+      const finalMsg = document.getElementById('final-message-box');
+      const overlay = document.getElementById('close-overlay');
+
+      mainHeart.style.display = 'block';
+      mainHeart.style.opacity = '1';
+
+      setTimeout(() => { angel.classList.add('angel-fly-in'); }, 500);
+
+      setTimeout(() => {
+        if (arrowSound) arrowSound.play().catch(() => {});
+        arrow.classList.add('arrow-shoot');
+      }, 3000);
+
+      setTimeout(() => {
+        if (blastSound) blastSound.play().catch(() => {});
+        mainHeart.classList.add('burst-animation');
+        heartScreen.classList.add('romantic-theme');
+
+        angel.style.opacity = '0';
+        angel.style.transform = 'translateY(-100px) scale(0.5)';
+
+        setTimeout(() => {
+          mainHeart.style.display = 'none';
+          finalMsg.classList.add('final-text-show');
+
+          setTimeout(() => {
+            overlay.classList.add('fade-to-black');
+          }, 5000);
+
+        }, 600);
+
+      }, 4100);
+    }
+  </script>
+</body>
+</html>
